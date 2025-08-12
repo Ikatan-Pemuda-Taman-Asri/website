@@ -1,86 +1,139 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import { Image } from "astro:assets";
 
-type Props = CollectionEntry<'blog'>['data'];
+import type { CollectionEntry } from "astro:content";
+
+import RootLayout from "@/layouts/RootLayout.astro";
+
+import { FormattedDate } from "@/components/FormattedDate";
+
+type Props = CollectionEntry<"kegiatan">["data"];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+<RootLayout title={title} description={description}>
+	<article class="mt-16">
+		<div class="hero-image mb-4 px-4 sm:px-12 md:px-16 lg:px-24 xl:px-32">
+			{
+				heroImage && (
+					<Image
+						transition:name={heroImage.src}
+						width={1920}
+						height={1080}
+						src={heroImage}
+						alt=""
+						class="h-full w-full rounded"
+					/>
+				)
 			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+		</div>
+		<div class="prose mx-auto flex max-w-prose flex-col items-center gap-1 px-6 md:px-0">
+			<div class="title mb-1 flex w-full flex-col items-center gap-1 text-center">
+				<div class="date">
+					<FormattedDate
+						client:idle
+						date={pubDate}
+						format={{ day: "numeric", month: "long", year: "numeric" }}
+					/>
+					{
+						updatedDate && (
+							<div class="last-updated-on">
+								Last updated on{" "}
+								<FormattedDate
+									client:idle
+									date={updatedDate}
+									format={{ day: "numeric", month: "long", year: "numeric" }}
+								/>
+							</div>
+						)
+					}
+				</div>
+				<h1 class="text-4xl font-semibold sm:text-5xl">{title}</h1>
+				<hr class="w-full border-neutral-500" />
+			</div>
+			<div class="markdown-content w-full">
+				<slot />
+			</div>
+		</div>
+	</article>
+</RootLayout>
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+<style is:global>
+	@reference "../styles/global.css";
+	.markdown-content h1 {
+		@apply mt-4 mb-px text-4xl font-extrabold tracking-tight sm:text-5xl;
+	}
+	.markdown-content h2 {
+		@apply mt-4 mb-px text-3xl font-bold tracking-tight sm:text-4xl;
+	}
+	.markdown-content h3 {
+		@apply mt-2 text-2xl font-semibold tracking-tight sm:text-3xl;
+	}
+	.markdown-content h4 {
+		@apply mt-2 text-xl font-semibold tracking-tight sm:text-2xl;
+	}
+	.markdown-content h5 {
+		@apply mt-2 text-lg font-semibold tracking-tight sm:text-xl;
+	}
+	.markdown-content h6 {
+		@apply mt-2 text-base font-semibold tracking-tight sm:text-lg;
+	}
+	.markdown-content p {
+		@apply mt-1 text-base font-normal;
+	}
+	.markdown-content ul {
+		@apply list-disc pl-4;
+	}
+	.markdown-content ol {
+		@apply list-decimal pl-4;
+	}
+	.markdown-content blockquote {
+		@apply border-l-4 border-muted-foreground pl-4 italic;
+	}
+	.markdown-content p {
+		@apply text-base;
+	}
+	.markdown-content pre {
+		@apply overflow-x-auto rounded px-4 py-2;
+	}
+	.markdown-content :not(pre) > code {
+		@apply rounded bg-secondary px-2 py-1 font-mono font-medium;
+	}
+
+	.markdown-content a {
+		@apply text-blue-500 underline duration-200 ease-out *:inline after:content-['_↗'] hover:text-blue-600;
+	}
+	.dark .markdown-content a {
+		@apply text-blue-400 hover:text-blue-500;
+	}
+
+	.markdown-content img {
+		@apply mx-auto my-1 rounded;
+	}
+	.markdown-content table {
+		@apply w-full table-auto border-collapse;
+	}
+	.markdown-content table th,
+	.markdown-content table td {
+		@apply border border-border p-2;
+	}
+	.markdown-content table th {
+		@apply bg-secondary font-semibold;
+	}
+	.markdown-content table td {
+		@apply bg-background;
+	}
+	.markdown-content kbd {
+		@apply rounded bg-secondary px-2 py-1 font-mono font-medium;
+	}
+	.markdown-content [data-footnote-ref] {
+		@apply scroll-mt-52;
+	}
+	.markdown-content .footnotes {
+		@apply mt-4 border-t border-muted-foreground pt-2 text-sm sm:mt-8;
+	}
+	.markdown-content .footnotes p {
+		@apply text-sm;
+	}
+</style>

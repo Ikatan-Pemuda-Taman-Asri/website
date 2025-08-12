@@ -1,0 +1,68 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import Header from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+const { title, description }: Props = Astro.props;
+const titleWithPrefix = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const descriptionValue = description ?? SITE_DESCRIPTION;
+---
+
+<script is:inline>
+	function setDarkMode(document) {
+		const getThemePreference = () => {
+			if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+				return localStorage.getItem("theme");
+			}
+			return "system";
+		};
+
+		const applyTheme = () => {
+			const theme = getThemePreference();
+			const isDark =
+				theme === "dark" ||
+				(theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+			document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+		};
+
+		applyTheme();
+
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleSystemThemeChange = () => {
+			const currentTheme = getThemePreference();
+			if (currentTheme === "system") {
+				applyTheme();
+			}
+		};
+
+		mediaQuery.addEventListener("change", handleSystemThemeChange);
+		return () => {
+			mediaQuery.removeEventListener("change", handleSystemThemeChange);
+		};
+	}
+
+	setDarkMode(document);
+	document.addEventListener("astro:before-swap", (ev) => {
+		setDarkMode(ev.newDocument);
+	});
+</script>
+
+<html lang="en">
+	<head>
+		<BaseHead title={titleWithPrefix} description={descriptionValue} />
+	</head>
+	<body class="scroll-smooth antialiased">
+		<Header />
+		<main class="mb-8 min-h-dvh sm:mb-12">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>

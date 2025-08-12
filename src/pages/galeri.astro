@@ -1,0 +1,91 @@
+---
+import RootLayout from "@/layouts/RootLayout.astro";
+import { FormattedDate } from "@/components/FormattedDate";
+import { siGoogledrive } from "simple-icons";
+
+const galleryList: {
+	year: number;
+	event?: {
+		name: string;
+		date: Date;
+		link: string;
+	}[];
+}[] = [
+	{
+		year: 2024,
+		event: [
+			{
+				name: "World Mental Health Day & Pelantikan Pengurus IPTA",
+				date: new Date("2024-10-26"),
+				link: "https://drive.google.com/drive/folders/1ERx3M4DW1Kt7orx24tSlqfOzzJ-4aTNH?usp=drive_link",
+			},
+			{
+				name: "Pemilu Ketua IPTA",
+				date: new Date("2024-10-6"),
+				link: "https://drive.google.com/drive/folders/1GRfmBgXZr8KzlG_-iz1cHQ5JrFyPsI8h?usp=drive_link",
+			},
+			{
+				name: "HUT Republik Indonesia ke-79",
+				date: new Date("2024-08-17"),
+				link: "https://drive.google.com/drive/folders/1w7T4qHNzXP6o0Ao7ms3FM8c115PkOstJ?usp=drive_link",
+			},
+		],
+	},
+	{
+		year: 2021,
+		event: [
+			{
+				name: "HUT Republik Indonesia ke-76",
+				date: new Date("2021-08-17"),
+				link: "https://drive.google.com/drive/folders/1ns4pBMoNwYzk2oPiA7Bekwo9s50KufHv?usp=drive_link",
+			},
+		],
+	},
+];
+---
+
+<RootLayout title="Gallery">
+	<div class="mt-10 px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24">
+		<h1
+			class="py-20 text-4xl font-semibold tracking-tighter sm:py-24 md:py-28 lg:py-32 lg:text-5xl xl:py-36"
+		>
+			Galeri Event
+		</h1>
+		<section class="flex flex-col gap-8 tracking-tight">
+			{
+				galleryList.map((gallery) => (
+					<section class="">
+						<h2 class="text-2xl font-bold tracking-tighter sm:text-3xl">{gallery.year}</h2>
+						<div class="mb-2 h-[2px] w-full bg-neutral-400" />
+						<ul class="flex flex-col gap-2">
+							{gallery.event?.map((event) => (
+								<li>
+									<a
+										href={event.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="flex flex-row items-center gap-4 rounded border px-4 py-2 duration-200 ease-out hover:shadow-md focus-visible:shadow-md sm:px-6 sm:py-4"
+									>
+										<div class="h-6 min-w-6">
+											<Fragment set:html={siGoogledrive.svg} />
+										</div>
+										<h3 class="flex flex-col gap-1 text-xl font-medium">
+											<span class="text-base font-normal">
+												<FormattedDate
+													client:load
+													date={event.date}
+													format={{ day: "numeric", month: "long" }}
+												/>
+											</span>
+											{event.name}
+										</h3>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
+		</section>
+	</div>
+</RootLayout>

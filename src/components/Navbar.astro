@@ -1,0 +1,49 @@
+---
+import { ModeToggle } from "@/components/mode-toggle";
+import { Image } from "astro:assets";
+import Logo from "@/assets/logo.svg";
+
+const linkList = [
+	{ href: "/", label: "Beranda" },
+	{ href: "/kegiatan", label: "Kegiatan" },
+	{ href: "/galeri", label: "Galeri" },
+	{ href: "/tentang-kami", label: "Tentang Kami" },
+];
+
+const { pathname } = Astro.url;
+const subpath = pathname.match(/[^/]+/g);
+---
+
+<header
+	class="fixed top-0 left-0 z-10 flex w-full items-center justify-center border-b border-border/80 bg-background backdrop-blur-lg sm:justify-between sm:px-10"
+>
+	<div class="flex items-baseline gap-2">
+		<Image src={Logo} alt="" class="h-6 w-auto" />
+		<h2 class="hidden text-2xl font-bold sm:block">IPTA</h2>
+	</div>
+	<div class="flex items-center gap-4">
+		<nav class="flex items-center justify-center gap-2 text-lg sm:justify-between">
+			{
+				linkList.map((link) => {
+					return (
+						<div class="group relative">
+							<a
+								href={link.href}
+								class:list={[
+									"z-1 block border-b-2 p-2 whitespace-nowrap transition duration-200 ease-out group-hover:text-blue-600",
+									link.href === pathname || link.href === "/" + subpath?.[0]
+										? "border-blue-600 font-bold"
+										: "border-blue-600/0 font-medium",
+								]}
+							>
+								{link.label}
+							</a>
+							<div class="absolute bottom-0 left-0 -z-1 h-[2px] w-0 bg-blue-600 transition-all duration-200 ease-custom group-hover:w-full" />
+						</div>
+					);
+				})
+			}
+		</nav>
+		<ModeToggle client:load />
+	</div>
+</header>

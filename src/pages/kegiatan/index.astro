@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+
+import RootLayout from "@/layouts/RootLayout.astro";
+
+import { getCollection } from "astro:content";
+import { FormattedDate } from "@/components/FormattedDate";
+
+const posts = (await getCollection("kegiatan")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<RootLayout title="Kegiatan">
+	<section class="mt-14 px-4 sm:px-12 md:px-16 lg:px-24 xl:px-32">
+		<ul class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:gap-10">
+			{
+				posts.map((post) => (
+					<li class="group sm:first:col-span-2">
+						<a href={`/kegiatan/${post.id}/`}>
+							<div class="relative aspect-video w-full">
+								{post.data.heroImage ? (
+									<Image
+										transition:name={post.data.heroImage.src}
+										width={1280}
+										height={720}
+										src={post.data.heroImage}
+										alt=""
+										class="h-full w-full rounded-sm object-cover"
+									/>
+								) : (
+									<div class="h-full w-full rounded-sm bg-neutral-200" />
+								)}
+								<div
+									class="absolute inset-0 -z-10 h-full w-full rounded-sm blur-[0] brightness-125 saturate-150 transition-all duration-200 ease-out group-hover:blur-sm"
+									style={{ background: `center/ cover no-repeat url(${post.data.heroImage})` }}
+								/>
+							</div>
+							<h4 class="text-xl font-semibold tracking-tight">{post.data.title}</h4>
+							<p class="text-muted-foreground">
+								<FormattedDate client:idle date={post.data.pubDate} />
+							</p>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</RootLayout>

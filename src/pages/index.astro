@@ -1,49 +1,61 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { Image } from "astro:assets";
+
+import RootLayout from "@/layouts/RootLayout.astro";
+
+import { Slideshow } from "@/components/Slideshow";
+
+const kegiatan = [
+	{
+		judul: "Hari Besar Nasional",
+		deskripsi:
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, quae nihil molestias vero, nam nemo rem veniam iusto cumque voluptatem illum voluptatibus odit sapiente doloremque eos itaque ipsum. Magni, ipsa?",
+	},
+	{
+		judul: "Pemberdayaan Remaja",
+		deskripsi:
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, quae nihil molestias vero, nam nemo rem veniam iusto cumque voluptatem illum voluptatibus odit sapiente doloremque eos itaque ipsum. Magni, ipsa?",
+	},
+	{
+		judul: "Aksi Sosial",
+		deskripsi:
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, quae nihil molestias vero, nam nemo rem veniam iusto cumque voluptatem illum voluptatibus odit sapiente doloremque eos itaque ipsum. Magni, ipsa?",
+	},
+];
+import hero from "@/assets/hero.jpg";
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<RootLayout>
+	<section
+		class="relative z-[-1] flex min-h-dvh flex-col items-center justify-center bg-[url('/hero.jpg')] bg-cover bg-fixed bg-center bg-no-repeat tracking-tight text-white after:absolute after:top-0 after:left-0 after:z-[-1] after:h-full after:w-full after:bg-linear-to-t after:from-black/65 after:to-black/15"
+	>
+		<h1 class="pt-8 text-center text-7xl leading-snug font-semibold tracking-tighter">
+			Ikatan Pemuda Taman Asri
+		</h1>
+		<p class="text-center text-2xl font-medium">Lorem Ipsum Tagline</p>
+	</section>
+
+	<section class="min-h-dvh px-6 py-20 tracking-tight sm:px-10 md:px-14 lg:px-20 xl:px-24">
+		<h2 class="text-4xl font-semibold tracking-tighter">Kegiatan</h2>
+		<div class="mb-4 h-[2px] w-full bg-neutral-300"></div>
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+			{
+				kegiatan.map((item) => (
+					<div class="flex h-full flex-col gap-1 rounded border pb-4 tracking-tight">
+						<Image src={hero} alt="" class="h-auto w-full pb-4" />
+						<h3 class="px-4 text-2xl font-semibold">{item.judul}</h3>
+						<p class="px-4 text-lg font-medium text-neutral-400">{item.deskripsi}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section
+		class="flex min-h-dvh flex-col gap-1 px-6 py-20 tracking-tight sm:px-10 md:px-14 lg:px-20 xl:px-24"
+	>
+		<h2 class="text-4xl font-semibold tracking-tighter">Acara Lalu</h2>
+		<div class="mb-4 h-[2px] w-full bg-neutral-300"></div>
+		<Slideshow client:load />
+	</section>
+</RootLayout>
