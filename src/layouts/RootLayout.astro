@@ -1,6 +1,6 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
-import Header from "@/components/Navbar.astro";
+import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 
@@ -59,8 +59,8 @@ const descriptionValue = description ?? SITE_DESCRIPTION;
 		<BaseHead title={titleWithPrefix} description={descriptionValue} />
 	</head>
 	<body class="scroll-smooth antialiased">
-		<Header />
-		<main class="mb-8 min-h-dvh sm:mb-12">
+		<Navbar />
+		<main class="min-h-svh">
 			<slot />
 		</main>
 		<Footer />
