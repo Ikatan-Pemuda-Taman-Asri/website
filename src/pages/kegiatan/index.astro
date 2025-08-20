@@ -37,8 +37,13 @@ const posts = (await getCollection("kegiatan")).sort(
 									style={{ background: `center/ cover no-repeat url(${post.data.heroImage?.src})` }}
 								/>
 							</div>
-							<h4 class="text-xl font-semibold tracking-tight">{post.data.title}</h4>
-							<p class="text-muted-foreground">
+							<h4 class="text-xl font-semibold tracking-tight" transition:name={post.data.title}>
+								{post.data.title}
+							</h4>
+							<p
+								class="text-muted-foreground"
+								transition:name={post.data.title + post.data.pubDate}
+							>
 								<FormattedDate client:idle date={post.data.pubDate} />
 							</p>
 						</a>
